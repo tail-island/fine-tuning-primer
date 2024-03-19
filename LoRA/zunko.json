@@ -102,7 +102,7 @@
   "seed": "1234",
   "shuffle_caption": false,
   "stop_text_encoder_training": 0,
-  "text_encoder_lr": 5e-05,
+  "text_encoder_lr": 0.0001,
   "train_batch_size": 8,
   "train_data_dir": "/home/ryo/Documents/Projects/fine-tuning-primer/LoRA/inputs",
   "train_norm": false,
