@@ -591,8 +591,8 @@ GeForce RTX
 <h2
 id="stable-diffusionでloraのプログラミングはしませんkohya_ssを動かすだけ">Stable
 DiffusionでLoRAのプログラミング……はしません。kohya_ssを動かすだけ</h2>
-<p>前のLoRAの説明のところで「らしい」を連発して分かっていないことが露呈してしまった私ですが、こんな私でも画像生成AIのStable
-DiffusionでLoRAできたのは、GUIでポチポチすればLoRAできちゃう素敵なソフトウェアが存在するから。</p>
+<p>前のLoRAの説明のところで「らしい」を連発して実は分かっていないことが露呈してしまった私ですが、こんな私でも画像生成AIのStable
+DiffusionでLoRAできるのは、GUIでポチポチすればLoRAできちゃう素敵なソフトウェアが存在するから。</p>
 <p>というわけで、Stable DiffusionでLoRAならばコレという<a
 href="https://github.com/bmaltais/kohya_ss">kohya_ss</a>をセットアップしましょう。</p>
 <h2 id="kohya_ssをセットアップする">kohya_ssをセットアップする</h2>
@@ -629,11 +629,11 @@ DiffusionでLoRAをやるときには学習させたいデータがあるので�
 href="東北ずん子・ずんだもんプロジェクト"><span>https://zunko.jp/</span></a>からデータを頂きました。</p>
 <p><img src="./image/tohoku-zunko.png"
 alt="東北ずん子・ずんだもんプロジェクト" /></p>
-<p>今回は、東北ずん子・ずんだもんプロジェクトのWebサイトを開いて、[イラスト・3D]をクリックし、東北ずん子の3頭身キャラの画像をダウンロードし、./LoRA/inputs/10_zunkoにダウンロードしました。下の赤で囲った画像が、今回ダウンロードしたデータです。</p>
+<p>今回は、東北ずん子・ずんだもんプロジェクトのWebサイトを開いて、[イラスト・3D]をクリックし、東北ずん子の3頭身キャラの画像をダウンロードし、./LoRA/inputs/10_zunkoに保存しました。下の赤で囲った画像が、今回ダウンロードしたデータです。</p>
 <p><img src="./image/tohoku-zunko-data.png"
 alt="使用した東北ずん子の画像データ" /></p>
 <p>実は、画面の中ほどまでスクロールすると<a
-href="https://drive.google.com/drive/folders/1NIZcBRvr5i8YfPsPYwvVMC7SoH-cWLIk">AI画像モデル用学習データ</a>ってのがあって、これは機械学習向きのデータなのでちょっと楽ができんだけどな。でも、皆様がLoRAするときは「画像データしかない」状態だと思うので、もったいないけどパスしました。</p>
+href="https://drive.google.com/drive/folders/1NIZcBRvr5i8YfPsPYwvVMC7SoH-cWLIk">AI画像モデル用学習データ</a>ってのがあって、これは機械学習向きのデータなのでちょっと楽ができるんですけど。でも、皆様がLoRAするときは「画像データしかない」状態だと思うので、今回は敢えて使用しませんでした。</p>
 <h2
 id="学習用のキャプションをツールで作る">学習用のキャプションをツールで作る</h2>
 <p>画像データだけでは、まだ学習に入れません。Stable
@@ -644,7 +644,7 @@ Captioning]を選択してください。</p>
 caption]]の横のフォルダボタンをクリックして画像のあるフォルダ（./LoRA/inputs/10_zunko）を選択し、[Prefix
 to add to WD14 caption]に「zunko,」を入力して、[Caption
 Images]ボタンをクリックします。すると、<code>gui.sh</code>を実行したターミナルにいろいろ表示されて、最終的に「captioning
-done」と表示されたらキャプション生成が完了です。</p>
+done」と表示されたらキャプション生成は完了です。</p>
 <p><img src="./image/captioning-1.png" alt="キャプション生成 #1" /></p>
 <p>以上で画像のフォルダーに*.txtファイルが生成されるので開いてみると「zunko,
 1girl,solo,long hair,smile,open mouth,simple background,vary long
@@ -652,18 +652,18 @@ hair,full body,yellow
 eyes...」のような、画像の特徴を表すキャプションが生成されていることが分かります。</p>
 <p>次に、キャプションの中から、東北ずん子であれば当たり前な単語を<b>削除</b>します。東北ずん子がlong
 hairだったりvery long hairだったりyello
-eyesだったりするのは当たり前で、わざわざキャプションで指定するようなことではないから<b>削除</b>するわけです。で、この作業もkohya_ss経由で実施できます。キャプションに含めてほしくない言葉を[Undesired
+eyesだったりするのは当たり前でわざわざキャプションで指定するようなことではないから、<b>削除</b>するわけです。で、この作業もkohya_ss経由で実施できます。キャプションに含めてほしくない言葉を[Undesired
 tags]に入力して、もう一度[Caption
 Images]ボタンをクリックしてください。</p>
 <p><img src="./image/captioning-2.png" alt="キャプション生成 #2" /></p>
 <p>long hairとvery long hairとyellow
 eyesとahogeを削除したキャプションでLoRAで学習すれば、zunkoを指定するだけで髪が長くて目が黄色でアホ毛がある東北ずん子の画像が生成されるというわけです。</p>
 <h2 id="元になるモデルを用意する-1">元になるモデルを用意する</h2>
-<p>でね、今やっているLoRAは横に簡単な計算を追加して足し込むという方式なので、モデルを大幅に変更することはできません。だから、実は、素のStable
+<p>でね、今やっているLoRAは横に簡単な計算を追加して足し込むという方式なので、モデルの特徴を大幅に変更することはできません。だから、実は、素のStable
 Diffusionに3頭身のアニメ絵を描かせるほどの能力はないんですよ……。</p>
-<p>ではどうするかというと、どこかの誰かが大量のデータと高価なコンピューターを使用して学習した特定用途向けのモデルをもらってくればよいわけです。今回は、2Dの画像生成向けに学習された<a
+<p>ではどうするかというと、どこかの誰かが大量のデータと高価なコンピューターを使用して学習した特定用途向けのモデル（ニューラル・ネットワークの構造ではなくて学習パラメーターの値の方）をもらってくればよいわけです。今回は、2Dの画像生成向けに学習済みの<a
 href="https://civitai.com/models/23900/anylora-checkpoint">AnyLoRA -
-Checkpoint</a>を使用しました。</p>
+Checkpoint</a>をもらってきました。</p>
 <p><img src="./image/AnyLoRA.png" alt="AnyLoRA - Checkpoint" /></p>
 <p>ダウンロード・アイコンをクリックして、[Full Model fp16 (3.22
 GB)]をクリックしてモデルをダウンロードして、kohya_ssが入っているフォルダにコピーしてください。</p>
@@ -691,21 +691,21 @@ training]ボタンをクリックして、<code>gui.sh</code>を実行したタ�
 <p><img src="./image/sample-per-epoch.png"
 alt="エポック毎に生成されたサンプル画像" /></p>
 <p>学習の初期では頭身を縮めるくらいしかできなかったのに、途中からアホ毛が生えてヘアバンドが枝豆になって、かなり東北ずん子っぽくなりました！</p>
-<p>……学習が変な方向に進んで、腕がおかしかったり英語が分からなったのでキャプションに入れられなかった臼が召喚されたりしているけどな。</p>
+<p>……学習が変な方向に進み過ぎちゃって、腕がおかしかったり英語が分からなったのでキャプションに入れられなかった臼が召喚されたりしているけどな。</p>
 <h2 id="stable-diffusionで思う存分画像を生成する">Stable
 Diffusionで思う存分画像を生成する</h2>
 <p>せっかくLoRAで学習したのですから、これを利用して東北ずん子の画像を生成してみましょう。私は人間が怠惰なので、Stable
 Diffusionの実行もGUIでやります。<a
-href="stable-diffusion-webui"><span>https://github.com/AUTOMATIC1111/stable-diffusion-webui</span></a>を使用しました。</p>
+href="https://github.com/AUTOMATIC1111/stable-diffusion-webui">stable-diffusion-webui</a>を使用しました。</p>
 <p>ただ、stable-diffusion-webuiをREADMEのやり方でセットアップするとCUDA
 12.1用のプロうグラムがセットアップされてしまうので、セットアップは少し工夫が必要でした。</p>
-<p>まずは、[<a
-href="https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Install-and-Run-on-NVidia-GPUs">https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Install-and-Run-on-NVidia-GPUs</a>](Install
-and Run on NVidia GPUs)を見ながら、以下を実行します。</p>
+<p>まずは、公式wikiの<a
+href="https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Install-and-Run-on-NVidia-GPUs">Install
+and Run on NVidia GPUs</a>を見ながら、以下を実行します。</p>
 <pre><code>$ sudo apt install git python3.10-venv -y
 $ git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui &amp;&amp; cd stable-diffusion-webui
 $ python3.10 -m venv venv</code></pre>
-<p>で、ここで<code>./webui.sh</code>を実行する前に、<code>source venv/bin/activate</code>でPythonの仮想環境であるvenvを有効化して、<a
+<p>で、ここで<code>./webui.sh</code>を実行する前に、<code>source venv/bin/activate</code>でPythonの仮想環境であるvenvを有効化し、<a
 href="https://pytorch.org/">PyTorch</a>のCUDA
 11.8向けのインストール手順に従って<code>pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118</code>を実行します。</p>
 <p>これでCUDAのバージョン問題を解決できたので、stable-diffusion-webuiの指示のとおりに以下を実行します。</p>
@@ -724,11 +724,148 @@ alt="zunko writes computer programs &lt;lora:zunko:1&gt;" /></p>
 <h1
 id="ragretrieval-augmented-generationをやってみる">RAG（Retrieval-Augmented
 Generation）をやってみる</h1>
-<p>「画像は一般的じゃあない。やっぱりGPTだよ。自然言語処理もやりたい」</p>
-<p>えっと、先程ご紹介したLoRAは自然言語処理にも使える汎用的な手法なのですけど、ごめんなさい、自然言語処理は画像生成よりもさらに重いので、いくらLoRAが軽いといっても我々一般人が用意できる程度のコンピューターでは実行が難しかったりします……。</p>
+<p>「画像は一般的じゃないよ。やっぱりGPTだよ。自然言語処理をやりたい」</p>
+<p>えっと、先程ご紹介したLoRAは自然言語処理にも使える汎用的な手法なのですけど、ごめんなさい、自然言語処理は画像生成よりもさらに重いので、いくらLoRAが軽いといっても、我々一般人が用意できる程度のコンピューターでは実行が難しかったりします。</p>
 <p>というわけで、RAGいってみましょう。</p>
-<p>……RAGはニューラル・ネットワークを調整しないのでファイン・チューニングの範囲から外れるのですけど、効果は似たようなものなので、本稿では私の独断と偏見によりRAGを取り上げても良いことにします。</p>
+<p>……RAGはニューラル・ネットワークを調整しないのでファイン・チューニングの範囲から外れちゃうんだけどな。でも、効果は似たようなものなので、本稿では私の独断と偏見によりRAGを取り上げても良いことにします。</p>
 <h2 id="ragとは">RAGとは？</h2>
+<p>ちょっと実験してみましょう。ChatGPTを開いて、私、尾島良司がイケメンかを聞いてみました。</p>
+<p><img src="./image/personal-question-1.png"
+alt="ChatGPTに尾島良司さんの外見について質問する #1" /></p>
+<p>当然、私のことなんか何も知りませんよね。でもここで、ChatGPTにちょっと命令したうえで、同じ質問をしてみます。</p>
+<p><img src="./image/personal-question-2.png"
+alt="ChatGPTに尾島良司さんの外見について質問する #2" /></p>
+<p>こんな感じに、ChatGPTはそれまでのやり取りを踏まえて回答してくれるわけですね。ということは、ChatGPTが知らないことでも、事前に教えてあげれば正しく回答できるようになるはず！</p>
+<p>というわけで、検索で関係する情報を集めてから回答を生成させれば精度を高められそうです。実は、これこそがRAGだったりします。</p>
+<p><img src="" /></p>
+<h2 id="今回はgptsで">今回は、GPTsで</h2>
+<p>RAGを実現するソフトウェアは存在しているので、それらのソフトウェアをローカルやクラウド上にセットアップすればRAGできるのですけど、セットアップすら面倒……。こんな私のような怠惰な人間であっても、OpenAIが提供するGPTsを使えば簡単にRAGをできちゃいます。</p>
+<p>……2024年3月現在だと有料の機能で、月に20ドル必要ですけどね。</p>
+<h2 id="とりあえずgptsを作ってみる">とりあえず、GPTsを作ってみる</h2>
+<p>ChatGPTの画面の[Explore
+GPTs]リンクをクリックして、[Create]ボタンをクリックします。</p>
+<p><img src="./image/create-gpts-1.png"
+alt="新しいGPTsを作成する" /></p>
+<p>英語でなんか言ってきますが、</p>
+<p><img src="./image/create-gpts-2.png"
+alt="新しいGPTsを作成する" /></p>
+<p>「日本語でお願いします」と言えば日本語になります（ならない場合は、「以後、GPT
+Builderの応答は全て日本語でお願いします」でイケるらしい）。</p>
+<p><img src="./image/create-gpts-3.png"
+alt="新しいGPTsを作成する" /></p>
+<p>あとは適当に会話していくだけ。</p>
+<p><img src="./image/create-gpts-4.png"
+alt="新しいGPTsを作成する" /></p>
+<p><img src="./image/create-gpts-5.png"
+alt="新しいGPTsを作成する" /></p>
+<p>これで完成です。LoRAについて質問してみると、私の説明よりもはるかに正確な説明が出力されました。</p>
+<p><img src="./image/create-gpts-6.png"
+alt="新しいGPTsを作成する" /></p>
+<p>素のChatGPTだとLong RangeのLoRAかLow-Rank
+AdaptationのLoRAかの確認から始まりますから、GPTsでとても便利になりました。</p>
+<p><img src="./image/create-gpts-7.png"
+alt="新しいGPTsを作成する" /></p>
+<h2
+id="gptsはすごいでも知らないことは答えられない">GPTsはすごい。でも「知らないこと」は答えられない</h2>
+<p>調子に乗って、私を褒め称えるだけの「尾島良司ナビ」も作ってみました。「尾島良司さんに関する質問全てに、尾島良司さんを称賛する回答をする」GPTsです。我ながら気持ち悪いことやっていますが、皆様どうか生あたたかい目で優しく見守ってあげてください。</p>
+<p><img src="./image/ojima-ryoji-navi-1.png" alt="尾島良司ナビ" /></p>
+<p>世間の誰も私を褒めてくれないからか、機械に褒めてもらっただけでちょっと嬉しくなっちゃった自分が嫌。でもね……</p>
+<p><img src="./image/ojima-ryoji-navi-2.png" alt="尾島良司ナビ" /></p>
+<p>当たり前なのですけど、このGPTsは私の身長を知りません。</p>
+<p>というわけで、RAGで情報を追加してもっと具体的に正確に褒めてもらいましょう。</p>
+<h2 id="検索先を作る">検索先を作る</h2>
+<p>今回は、検索先としてGoogle
+Sheetsを使用しました。私の属性を、キティちゃんの属性からくすねてスプレッドシートに記入します。</p>
+<p><img src="./image/ojima-ryoji-navi-3.png" alt="尾島良司ナビ" /></p>
+<p>[拡張機能] - [Apps
+Script]を選んで、HTTP通信向けの処理をJavaScriptで記述します。GPTsではJSONを返さないと駄目みたいだったので、JSONを返すようにしてみました。</p>
+<p><img src="./image/ojima-ryoji-navi-4.png" alt="尾島良司ナビ" /></p>
+<p><img src="./image/ojima-ryoji-navi-5.png" alt="尾島良司ナビ" /></p>
+<div class="sourceCode" id="cb35"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">// スプレッドシートの内容から、プロパティのマップを作成します。</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> properties <span class="op">=</span> (() <span class="kw">=&gt;</span> {</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> sheet <span class="op">=</span> SpreadsheetApp<span class="op">.</span><span class="fu">openById</span>(<span class="st">&#39;1pW9CvTtvquw_SZ-UU3GJWCXHJArX42qz1RMMSklAi9Y&#39;</span>)<span class="op">.</span><span class="fu">getSheets</span>()[<span class="dv">0</span>]</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> result <span class="op">=</span> <span class="kw">new</span> <span class="bu">Map</span>()</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="dv">1</span><span class="op">;</span> i <span class="op">&lt;=</span> sheet<span class="op">.</span><span class="fu">getLastRow</span>()<span class="op">;</span> <span class="op">++</span>i) {</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>    result<span class="op">.</span><span class="fu">set</span>(sheet<span class="op">.</span><span class="fu">getRange</span>(i<span class="op">,</span> <span class="dv">1</span>)<span class="op">.</span><span class="fu">getValue</span>()<span class="op">,</span> sheet<span class="op">.</span><span class="fu">getRange</span>(i<span class="op">,</span> <span class="dv">2</span>)<span class="op">.</span><span class="fu">getValue</span>())</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> result</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>})()</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a><span class="co">// HTTPのGetを処理します。プロパティのマップから値を取得し、JSON形式で返します。</span></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">doGet</span>(e) {</span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> ContentService<span class="op">.</span><span class="fu">createTextOutput</span>(</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">JSON</span><span class="op">.</span><span class="fu">stringify</span>({<span class="st">&#39;value&#39;</span><span class="op">:</span> properties<span class="op">.</span><span class="fu">get</span>(e<span class="op">.</span><span class="at">parameter</span><span class="op">.</span><span class="at">key</span>) <span class="op">??</span> <span class="st">&#39;不明&#39;</span>})</span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>  )<span class="op">.</span><span class="fu">setMimeType</span>(ContentService<span class="op">.</span><span class="at">MimeType</span><span class="op">.</span><span class="at">JSON</span>)</span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>コードを書けたので、デプロイします。</p>
+<p><img src="./image/ojima-ryoji-navi-6.png" alt="尾島良司ナビ" /></p>
+<p>GPTがアクセスできるようアクセスできるユーザーを「全員」にして（アクセス制限をかけてGPTs側でアクセスに関する情報を設定しても良いのですが、今回は楽をして「全員」にしました）、[デプロイ]ボタンをクリックしてください。</p>
+<p><img src="./image/ojima-ryoji-navi-7.png" alt="尾島良司ナビ" /></p>
+<p>これで検索先の作成は完了です。後で使用するので、ウェブアプリのURLをコピーしておいてください。</p>
+<p><img src="./image/ojima-ryoji-navi-8.png" alt="尾島良司ナビ" /></p>
+<h2 id="gptsにアクションを追加する">GPTsにアクションを追加する</h2>
+<p>GPTsで[Configure]を選んで、[Create new
+action]ボタンをクリックしてください。</p>
+<p><img src="./image/ojima-ryoji-navi-9.png" alt="尾島良司ナビ" /></p>
+<p><img src="./image/ojima-ryoji-navi-10.png" alt="尾島良司ナビ" /></p>
+<p>Schemaに以下の内容を入力します。</p>
+<div class="sourceCode" id="cb36"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;openapi&quot;</span><span class="fu">:</span> <span class="st">&quot;3.1.0&quot;</span><span class="fu">,</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;info&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;Get Property&quot;</span><span class="fu">,</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;プロパティを取得します&quot;</span><span class="fu">,</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;version&quot;</span><span class="fu">:</span> <span class="st">&quot;v1.0.0&quot;</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;servers&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;url&quot;</span><span class="fu">:</span> <span class="st">&quot;https://script.google.com/&quot;</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;paths&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>     <span class="dt">&quot;/macros/s/AKfycbwh3wMAwxhguhJLRhnF5GmoCgR_6MX6jwEuxiU2zT7DkyY_DCplpkOL7B_HYpTVyZhG7Q/exec&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;get&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;プロパティを取得します&quot;</span><span class="fu">,</span></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;operationId&quot;</span><span class="fu">:</span> <span class="st">&quot;GetProperty&quot;</span><span class="fu">,</span></span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>        <span class="dt">&quot;parameters&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>          <span class="fu">{</span></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>            <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;key&quot;</span><span class="fu">,</span></span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>            <span class="dt">&quot;in&quot;</span><span class="fu">:</span> <span class="st">&quot;query&quot;</span><span class="fu">,</span></span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>            <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;取得したいプロパティ名を日本語で指定してください&quot;</span><span class="fu">,</span></span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>            <span class="dt">&quot;required&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>            <span class="dt">&quot;schema&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>              <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;string&quot;</span></span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a>          <span class="fu">}</span></span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
+<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><code>servers.url</code>の値と<code>paths</code>の最初の属性の名前には、Google
+SpreadSheetでデプロイしたURLを入力してください。このアクションで何をできるのかとか、パラメーターに何を入れればよいのかとかは、<code>description</code>にふわっとした感じで指定してください。これだけで、GPTがいい感じに理解してなんとかしてくれます。</p>
+<p>念の為[Test]ボタンを押してみたら、GPTが適当にクエリーを作成してテストしてくれました。</p>
+<p><img src="./image/ojima-ryoji-navi-11.png" alt="尾島良司ナビ" /></p>
+<p>パラメーターが「天気」になっているがちょっと不安ですけど、日本語のパラメーターが送られているので大丈夫でしょう。</p>
+<h2
+id="gptsにアクションを使うように指示する">GPTsにアクションを使うように指示する</h2>
+<p>アクション追加時に設定した<code>operationId</code>の値を使用して、GPTsのInstrutionsを記述します。ここもふわっとした日本語で大丈夫。今回は「尾島良司さんのプロパティはGetPropertyから取得してください。「不明」が返ってきた場合は、適当に称賛してください。」にしました。</p>
+<p><img src="./image/ojima-ryoji-navi-12.png" alt="尾島良司ナビ" /></p>
+<p>これだけで、勝手に検索して、検索で得た情報を元に回答してくれました！</p>
+<p><img src="./image/ojima-ryoji-navi-13.png" alt="尾島良司ナビ" /></p>
+<p>検索の結果が「不明」になった場合も、Instructionsでふわっと指示しておいたので大丈夫です！</p>
+<p><img src="./image/ojima-ryoji-navi-14.png" alt="尾島良司ナビ" /></p>
+<p>この例だと情報が少ないので、たぶんKnowledgeとしてファイルをアップロードするだけでも大丈夫だった気がするのですけど、検索データが大きかったり情報の更新が必要な場合を考えてアクションでやってみました。</p>
+<p>というわけで、RAGは簡単です（サービスとして提供可能なクオリティを実現するには、Instructionsに禁止事項などもっといろいろと指定しなければなりませんけど）。ぜひ、皆様のアイデアで、有益だったり面白かったりするオリジナルのチャット・システムをじゃんじゃん作ってください。</p>
+<h1 id="おわりに">おわりに</h1>
+<p>深層学習は難しい技術のように感じるかもしれませんけど、本稿で述べたように「使う」だけならとても簡単です。特にStable
+DiffusionやChatGPT等の生成AIを使うのは簡単。生成AIは汎用性がとても高いので、何もせずにそのまま使うだけでビックリするくらい役に立ちます。</p>
+<p>しかも、これらをLoRAやRAGで調整するためのソフトウェアをいろいろな人が作ってくれていますから、あとはこれらのソフトウェアを使うだけ。それだけで、皆様の目的に合わせて調整された専用品を手にすることができます。ぜひ、LoRAやRAGで、皆様の素晴らしいアイデアを形にしてみてください。</p>
+<p>一番最初に述べた素のファイン・チューニングも、プログラミングが少し面倒ではありますけど、役に立つ場合は多いはずです。精度が必要な処理では、こんなやり方もあったよなぁと思い出してあげてください。</p>
 </article>
 </body>
 </html>

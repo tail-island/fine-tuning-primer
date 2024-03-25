@@ -610,7 +610,7 @@ LoRAでは横に付け加えた分だけを深層学習するので学習が軽�
 
 ## Stable DiffusionでLoRAのプログラミング……はしません。kohya_ssを動かすだけ
 
-前のLoRAの説明のところで「らしい」を連発して分かっていないことが露呈してしまった私ですが、こんな私でも画像生成AIのStable DiffusionでLoRAできたのは、GUIでポチポチすればLoRAできちゃう素敵なソフトウェアが存在するから。
+前のLoRAの説明のところで「らしい」を連発して実は分かっていないことが露呈してしまった私ですが、こんな私でも画像生成AIのStable DiffusionでLoRAできるのは、GUIでポチポチすればLoRAできちゃう素敵なソフトウェアが存在するから。
 
 というわけで、Stable DiffusionでLoRAならばコレという[kohya_ss](https://github.com/bmaltais/kohya_ss)をセットアップしましょう。
 
@@ -656,11 +656,11 @@ fp16                                                                            
 
 ![東北ずん子・ずんだもんプロジェクト](./image/tohoku-zunko.png)
 
-今回は、東北ずん子・ずんだもんプロジェクトのWebサイトを開いて、[イラスト・3D]をクリックし、東北ずん子の3頭身キャラの画像をダウンロードし、./LoRA/inputs/10_zunkoにダウンロードしました。下の赤で囲った画像が、今回ダウンロードしたデータです。
+今回は、東北ずん子・ずんだもんプロジェクトのWebサイトを開いて、[イラスト・3D]をクリックし、東北ずん子の3頭身キャラの画像をダウンロードし、./LoRA/inputs/10_zunkoに保存しました。下の赤で囲った画像が、今回ダウンロードしたデータです。
 
 ![使用した東北ずん子の画像データ](./image/tohoku-zunko-data.png)
 
-実は、画面の中ほどまでスクロールすると[AI画像モデル用学習データ](https://drive.google.com/drive/folders/1NIZcBRvr5i8YfPsPYwvVMC7SoH-cWLIk)ってのがあって、これは機械学習向きのデータなのでちょっと楽ができんだけどな。でも、皆様がLoRAするときは「画像データしかない」状態だと思うので、もったいないけどパスしました。
+実は、画面の中ほどまでスクロールすると[AI画像モデル用学習データ](https://drive.google.com/drive/folders/1NIZcBRvr5i8YfPsPYwvVMC7SoH-cWLIk)ってのがあって、これは機械学習向きのデータなのでちょっと楽ができるんですけど。でも、皆様がLoRAするときは「画像データしかない」状態だと思うので、今回は敢えて使用しませんでした。
 
 ## 学習用のキャプションをツールで作る
 
@@ -668,13 +668,13 @@ fp16                                                                            
 
 このキャプションを、kohya_ssを通じて生成しましょう。kohya_ssのGUIから、[Utilities]-[Captioning]-[WD14 Captioning]を選択してください。
 
-まずは、[Image folder to caption [containing the images to caption]]の横のフォルダボタンをクリックして画像のあるフォルダ（./LoRA/inputs/10_zunko）を選択し、[Prefix to add to WD14 caption]に「zunko,」を入力して、[Caption Images]ボタンをクリックします。すると、`gui.sh`を実行したターミナルにいろいろ表示されて、最終的に「captioning done」と表示されたらキャプション生成が完了です。
+まずは、[Image folder to caption [containing the images to caption]]の横のフォルダボタンをクリックして画像のあるフォルダ（./LoRA/inputs/10_zunko）を選択し、[Prefix to add to WD14 caption]に「zunko,」を入力して、[Caption Images]ボタンをクリックします。すると、`gui.sh`を実行したターミナルにいろいろ表示されて、最終的に「captioning done」と表示されたらキャプション生成は完了です。
 
 ![キャプション生成 #1](./image/captioning-1.png)
 
 以上で画像のフォルダーに*.txtファイルが生成されるので開いてみると「zunko, 1girl,solo,long hair,smile,open mouth,simple background,vary long hair,full body,yellow eyes...」のような、画像の特徴を表すキャプションが生成されていることが分かります。
 
-次に、キャプションの中から、東北ずん子であれば当たり前な単語を<b>削除</b>します。東北ずん子がlong hairだったりvery long hairだったりyello eyesだったりするのは当たり前で、わざわざキャプションで指定するようなことではないから<b>削除</b>するわけです。で、この作業もkohya_ss経由で実施できます。キャプションに含めてほしくない言葉を[Undesired tags]に入力して、もう一度[Caption Images]ボタンをクリックしてください。
+次に、キャプションの中から、東北ずん子であれば当たり前な単語を<b>削除</b>します。東北ずん子がlong hairだったりvery long hairだったりyello eyesだったりするのは当たり前でわざわざキャプションで指定するようなことではないから、<b>削除</b>するわけです。で、この作業もkohya_ss経由で実施できます。キャプションに含めてほしくない言葉を[Undesired tags]に入力して、もう一度[Caption Images]ボタンをクリックしてください。
 
 ![キャプション生成 #2](./image/captioning-2.png)
 
@@ -682,9 +682,9 @@ long hairとvery long hairとyellow eyesとahogeを削除したキャプショ�
 
 ## 元になるモデルを用意する
 
-でね、今やっているLoRAは横に簡単な計算を追加して足し込むという方式なので、モデルを大幅に変更することはできません。だから、実は、素のStable Diffusionに3頭身のアニメ絵を描かせるほどの能力はないんですよ……。
+でね、今やっているLoRAは横に簡単な計算を追加して足し込むという方式なので、モデルの特徴を大幅に変更することはできません。だから、実は、素のStable Diffusionに3頭身のアニメ絵を描かせるほどの能力はないんですよ……。
 
-ではどうするかというと、どこかの誰かが大量のデータと高価なコンピューターを使用して学習した特定用途向けのモデルをもらってくればよいわけです。今回は、2Dの画像生成向けに学習された[AnyLoRA - Checkpoint](https://civitai.com/models/23900/anylora-checkpoint)を使用しました。
+ではどうするかというと、どこかの誰かが大量のデータと高価なコンピューターを使用して学習した特定用途向けのモデル（ニューラル・ネットワークの構造ではなくて学習パラメーターの値の方）をもらってくればよいわけです。今回は、2Dの画像生成向けに学習済みの[AnyLoRA - Checkpoint](https://civitai.com/models/23900/anylora-checkpoint)をもらってきました。
 
 ![AnyLoRA - Checkpoint](./image/AnyLoRA.png)
 
@@ -714,15 +714,15 @@ long hairとvery long hairとyellow eyesとahogeを削除したキャプショ�
 
 学習の初期では頭身を縮めるくらいしかできなかったのに、途中からアホ毛が生えてヘアバンドが枝豆になって、かなり東北ずん子っぽくなりました！
 
-……学習が変な方向に進んで、腕がおかしかったり英語が分からなったのでキャプションに入れられなかった臼が召喚されたりしているけどな。
+……学習が変な方向に進み過ぎちゃって、腕がおかしかったり英語が分からなったのでキャプションに入れられなかった臼が召喚されたりしているけどな。
 
 ## Stable Diffusionで思う存分画像を生成する
 
-せっかくLoRAで学習したのですから、これを利用して東北ずん子の画像を生成してみましょう。私は人間が怠惰なので、Stable Diffusionの実行もGUIでやります。[https://github.com/AUTOMATIC1111/stable-diffusion-webui](stable-diffusion-webui)を使用しました。
+せっかくLoRAで学習したのですから、これを利用して東北ずん子の画像を生成してみましょう。私は人間が怠惰なので、Stable Diffusionの実行もGUIでやります。[stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui)を使用しました。
 
 ただ、stable-diffusion-webuiをREADMEのやり方でセットアップするとCUDA 12.1用のプロうグラムがセットアップされてしまうので、セットアップは少し工夫が必要でした。
 
-まずは、[https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Install-and-Run-on-NVidia-GPUs](Install and Run on NVidia GPUs)を見ながら、以下を実行します。
+まずは、公式wikiの[Install and Run on NVidia GPUs](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Install-and-Run-on-NVidia-GPUs)を見ながら、以下を実行します。
 
 ~~~
 $ sudo apt install git python3.10-venv -y
@@ -730,7 +730,7 @@ $ git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui && cd stable
 $ python3.10 -m venv venv
 ~~~
 
-で、ここで`./webui.sh`を実行する前に、`source venv/bin/activate`でPythonの仮想環境であるvenvを有効化して、[PyTorch](https://pytorch.org/)のCUDA 11.8向けのインストール手順に従って`pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118`を実行します。
+で、ここで`./webui.sh`を実行する前に、`source venv/bin/activate`でPythonの仮想環境であるvenvを有効化し、[PyTorch](https://pytorch.org/)のCUDA 11.8向けのインストール手順に従って`pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118`を実行します。
 
 これでCUDAのバージョン問題を解決できたので、stable-diffusion-webuiの指示のとおりに以下を実行します。
 
@@ -754,14 +754,199 @@ $ ./webui.sh
 
 # RAG（Retrieval-Augmented Generation）をやってみる
 
-「画像は一般的じゃあない。やっぱりGPTだよ。自然言語処理もやりたい」
+「画像は一般的じゃないよ。やっぱりGPTだよ。自然言語処理をやりたい」
 
-えっと、先程ご紹介したLoRAは自然言語処理にも使える汎用的な手法なのですけど、ごめんなさい、自然言語処理は画像生成よりもさらに重いので、いくらLoRAが軽いといっても我々一般人が用意できる程度のコンピューターでは実行が難しかったりします……。
+えっと、先程ご紹介したLoRAは自然言語処理にも使える汎用的な手法なのですけど、ごめんなさい、自然言語処理は画像生成よりもさらに重いので、いくらLoRAが軽いといっても、我々一般人が用意できる程度のコンピューターでは実行が難しかったりします。
 
 というわけで、RAGいってみましょう。
 
-……RAGはニューラル・ネットワークを調整しないのでファイン・チューニングの範囲から外れるのですけど、効果は似たようなものなので、本稿では私の独断と偏見によりRAGを取り上げても良いことにします。
+……RAGはニューラル・ネットワークを調整しないのでファイン・チューニングの範囲から外れちゃうんだけどな。でも、効果は似たようなものなので、本稿では私の独断と偏見によりRAGを取り上げても良いことにします。
 
 ## RAGとは？
 
+ちょっと実験してみましょう。ChatGPTを開いて、私、尾島良司がイケメンかを聞いてみました。
 
+![ChatGPTに尾島良司さんの外見について質問する #1](./image/personal-question-1.png)
+
+当然、私のことなんか何も知りませんよね。でもここで、ChatGPTにちょっと命令したうえで、同じ質問をしてみます。
+
+![ChatGPTに尾島良司さんの外見について質問する #2](./image/personal-question-2.png)
+
+こんな感じに、ChatGPTはそれまでのやり取りを踏まえて回答してくれるわけですね。ということは、ChatGPTが知らないことでも、事前に教えてあげれば正しく回答できるようになるはず！
+
+というわけで、検索で関係する情報を集めてから回答を生成させれば精度を高められそうです。実は、これこそがRAGだったりします。
+
+![]()
+
+## 今回は、GPTsで
+
+RAGを実現するソフトウェアは存在しているので、それらのソフトウェアをローカルやクラウド上にセットアップすればRAGできるのですけど、セットアップすら面倒……。こんな私のような怠惰な人間であっても、OpenAIが提供するGPTsを使えば簡単にRAGをできちゃいます。
+
+……2024年3月現在だと有料の機能で、月に20ドル必要ですけどね。
+
+## とりあえず、GPTsを作ってみる
+
+ChatGPTの画面の[Explore GPTs]リンクをクリックして、[Create]ボタンをクリックします。
+
+![新しいGPTsを作成する](./image/create-gpts-1.png)
+
+英語でなんか言ってきますが、
+
+![新しいGPTsを作成する](./image/create-gpts-2.png)
+
+「日本語でお願いします」と言えば日本語になります（ならない場合は、「以後、GPT Builderの応答は全て日本語でお願いします」でイケるらしい）。
+
+![新しいGPTsを作成する](./image/create-gpts-3.png)
+
+あとは適当に会話していくだけ。
+
+![新しいGPTsを作成する](./image/create-gpts-4.png)
+
+![新しいGPTsを作成する](./image/create-gpts-5.png)
+
+これで完成です。LoRAについて質問してみると、私の説明よりもはるかに正確な説明が出力されました。
+
+![新しいGPTsを作成する](./image/create-gpts-6.png)
+
+素のChatGPTだとLong RangeのLoRAかLow-Rank AdaptationのLoRAかの確認から始まりますから、GPTsでとても便利になりました。
+
+![新しいGPTsを作成する](./image/create-gpts-7.png)
+
+## GPTsはすごい。でも「知らないこと」は答えられない
+
+調子に乗って、私を褒め称えるだけの「尾島良司ナビ」も作ってみました。「尾島良司さんに関する質問全てに、尾島良司さんを称賛する回答をする」GPTsです。我ながら気持ち悪いことやっていますが、皆様どうか生あたたかい目で優しく見守ってあげてください。
+
+![尾島良司ナビ](./image/ojima-ryoji-navi-1.png)
+
+世間の誰も私を褒めてくれないからか、機械に褒めてもらっただけでちょっと嬉しくなっちゃった自分が嫌。でもね……
+
+![尾島良司ナビ](./image/ojima-ryoji-navi-2.png)
+
+当たり前なのですけど、このGPTsは私の身長を知りません。
+
+というわけで、RAGで情報を追加してもっと具体的に正確に褒めてもらいましょう。
+
+## 検索先を作る
+
+今回は、検索先としてGoogle Sheetsを使用しました。私の属性を、キティちゃんの属性からくすねてスプレッドシートに記入します。
+
+![尾島良司ナビ](./image/ojima-ryoji-navi-3.png)
+
+[拡張機能] - [Apps Script]を選んで、HTTP通信向けの処理をJavaScriptで記述します。GPTsではJSONを返さないと駄目みたいだったので、JSONを返すようにしてみました。
+
+![尾島良司ナビ](./image/ojima-ryoji-navi-4.png)
+
+![尾島良司ナビ](./image/ojima-ryoji-navi-5.png)
+
+~~~ javascript
+// スプレッドシートの内容から、プロパティのマップを作成します。
+const properties = (() => {
+  const sheet = SpreadsheetApp.openById('1pW9CvTtvquw_SZ-UU3GJWCXHJArX42qz1RMMSklAi9Y').getSheets()[0]
+
+  const result = new Map()
+
+  for (let i = 1; i <= sheet.getLastRow(); ++i) {
+    result.set(sheet.getRange(i, 1).getValue(), sheet.getRange(i, 2).getValue())
+  }
+
+  return result
+})()
+
+// HTTPのGetを処理します。プロパティのマップから値を取得し、JSON形式で返します。
+function doGet(e) {
+  return ContentService.createTextOutput(
+    JSON.stringify({'value': properties.get(e.parameter.key) ?? '不明'})
+  ).setMimeType(ContentService.MimeType.JSON)
+}
+~~~
+
+コードを書けたので、デプロイします。
+
+![尾島良司ナビ](./image/ojima-ryoji-navi-6.png)
+
+GPTがアクセスできるようアクセスできるユーザーを「全員」にして（アクセス制限をかけてGPTs側でアクセスに関する情報を設定しても良いのですが、今回は楽をして「全員」にしました）、[デプロイ]ボタンをクリックしてください。
+
+![尾島良司ナビ](./image/ojima-ryoji-navi-7.png)
+
+これで検索先の作成は完了です。後で使用するので、ウェブアプリのURLをコピーしておいてください。
+
+![尾島良司ナビ](./image/ojima-ryoji-navi-8.png)
+
+## GPTsにアクションを追加する
+
+GPTsで[Configure]を選んで、[Create new action]ボタンをクリックしてください。
+
+![尾島良司ナビ](./image/ojima-ryoji-navi-9.png)
+
+![尾島良司ナビ](./image/ojima-ryoji-navi-10.png)
+
+Schemaに以下の内容を入力します。
+
+~~~ json
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Get Property",
+    "description": "プロパティを取得します",
+    "version": "v1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://script.google.com/"
+    }
+  ],
+  "paths": {
+     "/macros/s/AKfycbwh3wMAwxhguhJLRhnF5GmoCgR_6MX6jwEuxiU2zT7DkyY_DCplpkOL7B_HYpTVyZhG7Q/exec": {
+      "get": {
+        "description": "プロパティを取得します",
+        "operationId": "GetProperty",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "description": "取得したいプロパティ名を日本語で指定してください",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+~~~
+
+`servers.url`の値と`paths`の最初の属性の名前には、Google SpreadSheetでデプロイしたURLを入力してください。このアクションで何をできるのかとか、パラメーターに何を入れればよいのかとかは、`description`にふわっとした感じで指定してください。これだけで、GPTがいい感じに理解してなんとかしてくれます。
+
+念の為[Test]ボタンを押してみたら、GPTが適当にクエリーを作成してテストしてくれました。
+
+![尾島良司ナビ](./image/ojima-ryoji-navi-11.png)
+
+パラメーターが「天気」になっているがちょっと不安ですけど、日本語のパラメーターが送られているので大丈夫でしょう。
+
+## GPTsにアクションを使うように指示する
+
+アクション追加時に設定した`operationId`の値を使用して、GPTsのInstrutionsを記述します。ここもふわっとした日本語で大丈夫。今回は「尾島良司さんのプロパティはGetPropertyから取得してください。「不明」が返ってきた場合は、適当に称賛してください。」にしました。
+
+![尾島良司ナビ](./image/ojima-ryoji-navi-12.png)
+
+これだけで、勝手に検索して、検索で得た情報を元に回答してくれました！
+
+![尾島良司ナビ](./image/ojima-ryoji-navi-13.png)
+
+検索の結果が「不明」になった場合も、Instructionsでふわっと指示しておいたので大丈夫です！
+
+![尾島良司ナビ](./image/ojima-ryoji-navi-14.png)
+
+この例だと情報が少ないので、たぶんKnowledgeとしてファイルをアップロードするだけでも大丈夫だった気がするのですけど、検索データが大きかったり情報の更新が必要な場合を考えてアクションでやってみました。
+
+というわけで、RAGは簡単です（サービスとして提供可能なクオリティを実現するには、Instructionsに禁止事項などもっといろいろと指定しなければなりませんけど）。ぜひ、皆様のアイデアで、有益だったり面白かったりするオリジナルのチャット・システムをじゃんじゃん作ってください。
+
+# おわりに
+
+深層学習は難しい技術のように感じるかもしれませんけど、本稿で述べたように「使う」だけならとても簡単です。特にStable DiffusionやChatGPT等の生成AIを使うのは簡単。生成AIは汎用性がとても高いので、何もせずにそのまま使うだけでビックリするくらい役に立ちます。
+
+しかも、これらをLoRAやRAGで調整するためのソフトウェアをいろいろな人が作ってくれていますから、あとはこれらのソフトウェアを使うだけ。それだけで、皆様の目的に合わせて調整された専用品を手にすることができます。ぜひ、LoRAやRAGで、皆様の素晴らしいアイデアを形にしてみてください。
+
+一番最初に述べた素のファイン・チューニングも、プログラミングが少し面倒ではありますけど、役に立つ場合は多いはずです。精度が必要な処理では、こんなやり方もあったよなぁと思い出してあげてください。
