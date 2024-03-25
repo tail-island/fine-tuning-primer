@@ -882,6 +882,8 @@ GPTsで[Configure]を選んで、[Create new action]ボタンをクリックし�
 
 Schemaに以下の内容を入力します。
 
+![尾島良司ナビ](./image/ojima-ryoji-navi-10x.png)
+
 ~~~ json
 {
   "openapi": "3.1.0",
