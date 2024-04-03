@@ -7,8 +7,8 @@ from itertools import starmap
 
 
 # データセットを作成します。
-training_data = tf.keras.utils.image_dataset_from_directory('../input/cats_and_dogs_filtered/train', image_size=(224, 224))
-validation_and_test_data = tf.keras.utils.image_dataset_from_directory('../input/cats_and_dogs_filtered/validation', image_size=(224, 224))
+training_data = tf.keras.utils.image_dataset_from_directory('../input/cats_and_dogs_filtered/train', shuffle=True, batch_size=32, image_size=(224, 224))
+validation_and_test_data = tf.keras.utils.image_dataset_from_directory('../input/cats_and_dogs_filtered/validation', shuffle=True, batch_size=32, image_size=(224, 224))
 test_data = validation_and_test_data.take(int(validation_and_test_data.cardinality().numpy() * 0.2))
 validation_data = validation_and_test_data.skip(int(validation_and_test_data.cardinality().numpy() * 0.2))
 
@@ -16,7 +16,7 @@ validation_data = validation_and_test_data.skip(int(validation_and_test_data.car
 base_model = tf.keras.applications.mobilenet_v2.MobileNetV2()
 
 # 元になるモデルから不要な層を削除した新しいモデルを作成します。
-base_model = tf.keras.Model(base_model.layers[0].input, base_model.layers[-2].output, name=base_model.name)
+base_model = tf.keras.Model(base_model.input, base_model.layers[-2].output, name=base_model.name)
 
 # ニューラル・ネットワークを作成します。
 input = base_model.input
@@ -41,7 +41,7 @@ model.summary()
 # モデルを学習します。
 model.compile(optimizer=tf.keras.optimizers.AdamW(learning_rate=0.0001),
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-              metrics=(tf.keras.metrics.SparseCategoricalAccuracy(),))
+              metrics=[tf.keras.metrics.SparseCategoricalAccuracy()])
 history_1 = model.fit(training_data, epochs=10, validation_data=validation_data)
 
 # もう一回！
@@ -57,7 +57,7 @@ model.summary()
 # モデルを学習します。
 model.compile(optimizer=tf.keras.optimizers.AdamW(learning_rate=0.00001),
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-              metrics=(tf.keras.metrics.SparseCategoricalAccuracy(),))
+              metrics=[tf.keras.metrics.SparseCategoricalAccuracy()])
 history_2 = model.fit(training_data, epochs=history_1.epoch[-1] + 1 + 10, initial_epoch=history_1.epoch[-1] + 1, validation_data=validation_data)
 
 # 学習曲線を表示します。
@@ -99,4 +99,4 @@ for i, [x, y, y_pred] in enumerate(take(9, zip(xs, ys, ys_pred))):
 plt.show()
 
 # モデルを保存します。
-model.save('../working/model')
+model.save('../working/model.keras')
